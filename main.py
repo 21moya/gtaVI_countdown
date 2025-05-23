@@ -21,17 +21,17 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 load_dotenv()
 
 async def start_web_server():
-    port = os.getenv("PORT")
+    PORT = os.getenv("PORT")
     app = web.Application()
     async def health_check(request):
         return web.Response(text="Bot is running")
     app.router.add_get('/', health_check)
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, '0.0.0.0', 8080)
+    site = web.TCPSite(runner, '0.0.0.0', PORT)
 
     await site.start()
-    print("Pseudo-Webserver läuft auf Port 8080")
+    print(f"Pseudo-Webserver läuft auf Port {PORT}")
 
 @bot.event
 async def on_ready():
