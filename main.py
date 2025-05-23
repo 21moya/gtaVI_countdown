@@ -109,5 +109,7 @@ def main():
     BOT_TOKEN = os.getenv("BOT_TOKEN")
     bot.run(BOT_TOKEN, log_handler=handler)
 
+    start_web_server()
+
 if __name__ == "__main__":
     main()  
