@@ -36,6 +36,7 @@ async def start_web_server():
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user}')
+    bot.loop.create_task(start_web_server())
 
 @bot.event
 async def on_message(message):
@@ -108,8 +109,6 @@ def main():
 
     BOT_TOKEN = os.getenv("BOT_TOKEN")
     bot.run(BOT_TOKEN, log_handler=handler)
-
-    start_web_server()
 
 if __name__ == "__main__":
     main()  
