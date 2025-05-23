@@ -7,6 +7,8 @@ from time_diff import calculate_time_diff
 from dotenv import load_dotenv
 import os
 
+from aiohttp import web
+
 intents = discord.Intents.default()
 intents.messages = True
 intents.message_content = True
@@ -15,6 +17,18 @@ intents.guilds = True
 bot = commands.Bot(command_prefix="$", intents=intents)
 
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+
+async def start_web_server():
+    app = web.Application()
+    async def health_check(request):
+        return web.Response(text="Bot is running")
+    app.router.add_get('/', health_check)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, '0.0.0.0', 8080)
+
+    await site.start()
+    print("Pseudo-Webserver läuft auf Port 8080")
 
 @bot.event
 async def on_ready():
