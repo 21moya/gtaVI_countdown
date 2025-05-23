@@ -18,7 +18,10 @@ bot = commands.Bot(command_prefix="$", intents=intents)
 
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 
+load_dotenv()
+
 async def start_web_server():
+    port = os.getenv("PORT")
     app = web.Application()
     async def health_check(request):
         return web.Response(text="Bot is running")
@@ -103,7 +106,6 @@ def main():
     bot.add_command(start)
     bot.add_command(stop)
 
-    load_dotenv()
     BOT_TOKEN = os.getenv("BOT_TOKEN")
     bot.run(BOT_TOKEN, log_handler=handler)
 
