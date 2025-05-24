@@ -7,6 +7,22 @@ from time_diff import calculate_time_diff
 from dotenv import load_dotenv
 import os
 
+from flask import Flask
+from threading import Thread
+
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot is alive!"
+
+def run():
+    app.run(host='0.0.0', port=8080)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
 intents = discord.Intents.default()
 intents.messages = True
 intents.message_content = True
@@ -31,8 +47,11 @@ async def on_guild_available(guild):
 
 @commands.command()
 async def init(ctx, channel_id):
-    bot.channel_id = int(channel_id)
-    await ctx.send(f"Channel ID: {bot.channel_id} set.")
+    try:
+        bot.channel_id = int(channel_id)
+        await ctx.send(f"Channel ID: {bot.channel_id} set.")
+    except ValueError:
+        await ctx.send("Please provide a valid channel ID (numeric).")
 
 @init.error
 async def init_error(ctx, error):
@@ -43,9 +62,11 @@ async def init_error(ctx, error):
 
 @commands.command()
 async def start(ctx):
-    if not update_channel_name.is_running():
+    if not update_channel_name.is_running() and hasattr(bot, 'channel_id'):
         await ctx.send("Starting countdown...")
         update_channel_name.start()
+    else:
+        await ctx.send("Countdown is already running or no channel ID was set.")
 
 @start.error
 async def start_error(ctx, error):
@@ -85,12 +106,17 @@ async def update_channel_name():
             print(f"Failed to update channel name: {e}")
 
 def main():
+    keep_alive()
+
     bot.add_command(init)
     bot.add_command(start)
     bot.add_command(stop)
 
     load_dotenv()
     BOT_TOKEN = os.getenv("BOT_TOKEN")
+    if not BOT_TOKEN:
+        raise ValueError("BOT_TOKEN not found in environment variables.")
+
     bot.run(BOT_TOKEN, log_handler=handler)
 
 if __name__ == "__main__":
