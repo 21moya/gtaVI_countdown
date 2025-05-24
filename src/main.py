@@ -3,7 +3,7 @@ import logging
 from discord.ext import commands, tasks
 
 import asyncio
-from src.time_diff import calculate_time_diff
+from time_diff import calculate_time_diff
 from dotenv import load_dotenv
 import os
 
