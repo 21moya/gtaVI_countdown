@@ -1,6 +1,6 @@
 # GTA 6 Countdown Discord Bot
 
-A lightweight Discord bot that counts down to the *Grand Theft Auto VI* release by updating a channel name and posting messages.
+A lightweight Discord bot that counts down to the *Grand Theft Auto VI* release by updating a channel name.
 
 ## Commands
 
